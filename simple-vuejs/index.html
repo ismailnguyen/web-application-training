@@ -1,0 +1,67 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>accelerate it - exemple</title>
+  </head>
+  <body>
+    <div id="example">
+	  <div class="container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Nom</th>
+          <th scope="col">Mass</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-if="tata" v-for="personnage in personnages"> 
+          <th scope="row">{{ personnage.name }}</td>
+          <th scope="row">{{ personnage.mass | obesité }}</td>
+        </tr>
+      </tbody>
+    </table> 
+  </div> 
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+        new Vue({
+            el: '#example',
+            data: 
+			{ 
+				hello: 'Hello Accelerate students !',
+				tata: true,
+				pleinDeMessages: [
+					'premier message',
+					'un second',
+					'encore un autre',
+					'et voilà fini'
+				],
+				personnages: []
+			},
+			mounted () {
+				fetch ('https://swapi.dev/api/people/')
+				.then(resultat => resultat.json())
+				.then(resultat => this.personnages = resultat.results)
+			},
+			filters: {
+				obesité: function (poids) {
+					if (poids > 130)
+						return 'Obèse';
+					
+					return poids + ' kg';
+				}
+			}
+        })
+    </script>
+	<style>
+		p {
+			color: black;
+			font-weight: bold;
+			background-color: #ffcb00;
+		}
+	</style>
+  </body>
+</html>
