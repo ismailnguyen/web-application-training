@@ -1,1 +1,1 @@
-# vuejs-training
+# web-application-training
