@@ -1,0 +1,113 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+		<title>Pokédex</title>
+		
+		<style>
+			.pokemon__type--fire {
+				color: white;
+				background-color: Orange;
+				border-radius: 5px;
+				width: 100%;
+				text-align: center;
+			}
+			.pokemon__type--grass {
+				color: white;
+				background-color: Green;
+				border-radius: 5px;
+				width: 100%;
+				text-align: center;
+			}
+			.pokemon__type--water {
+				color: white;
+				background-color: Blue;
+				border-radius: 5px;
+				width: 100%;
+				text-align: center;
+			}
+			.pokemon__type--bug {
+				color: white;
+				background-color: DarkGreen;
+				border-radius: 5px;
+				width: 100%;
+				text-align: center;
+			}
+			
+			.card .card-image {
+				background-color: #F2F2F2;
+			}
+			
+			.card .card-content .subtitle {
+				color: grey;
+				font-size: small;
+			}
+		</style>
+		
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+		
+		<script src="https://unpkg.com/vue"></script>
+	</head>
+
+	<body>
+		<div id="app">
+			<section class="section">
+				<div class="container">
+					<div class="columns is-mobile is-multiline is-centered">
+						<div class="column is-one-third-desktop is-half-tablet is-full-mobile" v-for="pokemon in pokemonList">
+							<div class="card">
+								<div class="card-image">			
+									<img :src="pokemon.image" :alt="pokemon.name">
+								</div>
+								<div class="card-content">
+									<p class="title">{{ pokemon.name }}</p>
+									<p class="subtitle">#{{ pokemon.number }}</p>
+									<p :class="getTypeCssClass(pokemon.type)">{{ pokemon.type }}</p>	
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		
+		<script>
+		const POKEMON_LIST_API_URL = 'https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151';
+        
+		new Vue({
+            el: '#app',
+            data: 
+			{
+				pokemonList: []
+			},
+			mounted () {
+				this.fetchPokemonList(POKEMON_LIST_API_URL)
+			},
+			methods: {
+				fetchPokemonList: function (apiUrl) {
+					fetch (apiUrl)
+					.then(pokemonListResponse => pokemonListResponse.json())
+					.then(pokemonListResponse => pokemonListResponse.results)
+					.then(pokemonList => pokemonList.forEach(pokemon => this.fetchPokemonDetail(pokemon.url)))
+				},
+				fetchPokemonDetail: function (pokemonUrl) {
+					fetch (pokemonUrl)
+					.then(pokemonResponse => pokemonResponse.json())
+					.then(pokemon => this.addPokemon(pokemon))
+				},
+				addPokemon: function (pokemon) {
+					this.pokemonList.push({
+						name: pokemon.name,
+						number: pokemon.id,
+						type: pokemon.types[0].type.name,
+						image: pokemon.sprites.front_default
+					})
+				},
+				getTypeCssClass: function (type) {
+					return 'pokemon__type--' + type
+				}
+			}
+        })
+    </script>
+	</body>
+</html>
