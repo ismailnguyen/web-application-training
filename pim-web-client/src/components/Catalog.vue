@@ -2,13 +2,13 @@
 	<div>
 		<Loader v-if="showLoader" />
 
-		<section class="section">
+		<section class="section" v-else>
 			<div class="container">
 				<div class="columns is-mobile is-multiline is-centered">
 					<div class="column is-one-third-desktop is-half-tablet is-full-mobile" v-for="(product, index) in productList" :key="index">
 						<div class="card">
 							<div class="card-image">			
-								<img :src="product.image" :alt="product.sku" class="lazyload">
+								<img src="../assets/logo.png" :alt="product.sku" class="lazyload">
 							</div>
 							<div class="card-content">
 								<p class="product--type">{{ product.type }}</p>	
@@ -44,21 +44,19 @@
 			fetchProductList: function (apiUrl) {
 				fetch (apiUrl)
 				.then(response => response.json())
-				.then(productList => this.productList = productList.slice(0,10).map(product => this.mapProduct(product)))
+				.then(productList => this.productList = productList.map(product => this.mapProduct(product)))
 			},
 			
 			mapProduct: function (product) {
 				return {
-					name: product.sku,
 					sku: product.sku,
 					type: product.segment.description,
-					image: product.image.replace("'", "")
 				}
 			}
 		},
 		computed: {
 			showLoader: function () {
-				return this.productList.length == 0
+				return true
 			}
 		}
 	}
